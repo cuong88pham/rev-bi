@@ -1,6 +1,23 @@
 pipeline {
   agent any
+  tools {nodejs "node"}
+
   stages {
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/cuong88pham/rev-bi.git'
+      }
+    }
+    stage('Change Branch') {
+      steps {
+        sh 'git checkout develop'
+      }
+    }
+    stage('Install dependencies') {
+      steps {
+        sh 'npm install'
+      }
+    }
     stage('Check Rate') {
       parallel {
         stage('BTC') {
@@ -10,7 +27,7 @@ pipeline {
         }
         stage('ETH') {
           steps {
-            echo 'ETH'
+            sh 'node eth.js'
           }
         }
       }
